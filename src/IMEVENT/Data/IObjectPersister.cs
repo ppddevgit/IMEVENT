@@ -9,7 +9,7 @@ namespace IMEVENT.Data
     {
          int Persist();
         /*
-         * this method will return the id of a record if it already exists 
+         * this method will return the id of a record if it already exists base on unicity criteria defined
          */
          object GetRecordID();
        

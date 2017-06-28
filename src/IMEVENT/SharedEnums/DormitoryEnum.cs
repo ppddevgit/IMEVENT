@@ -16,6 +16,8 @@ namespace IMEVENT.SharedEnums
     {
         MATELAS = 0,
         BED = 1,
-        VIP = 2            
+        VIP = 2,
+        BED_E = 3,
+        BED_R = 4
     }   
 }

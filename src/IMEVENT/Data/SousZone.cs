@@ -7,12 +7,12 @@ using System.ComponentModel.DataAnnotations;
 namespace IMEVENT.Data
 {
     public class SousZone:IObjectPersister
-    {
-        public int ZoneId { get; set; }
+    {        
         [Key]
-        public int Id { get; set; }
-        public int IdParent { get; set; }
-        public String Label { get; set; }
+        public int Id { get; set; }        
+        public string Label { get; set; }
+        public int ZoneId { get; set; }
+
         public int Persist()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
@@ -29,10 +29,17 @@ namespace IMEVENT.Data
             context.SaveChanges();
             return this.Id;
         }
-        public  int GetSousZoneIdByLabel( string label)
+
+        public static Dictionary<int, string> GetList()
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
-            var zone = context.SousZones.FirstOrDefault(d => d.Label.Equals(label));
+            return context.SousZones.Where(g => g.Id != 0).ToDictionary(x => x.Id, x => x.Label);
+        }
+
+        public  int GetSousZoneIdByLabel(string label, int zoneId)
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            var zone = context.SousZones.FirstOrDefault(d => d.Label.Equals(label) && d.ZoneId == zoneId);
             if (zone != null)
             {
                 return zone.Id;
@@ -42,7 +49,7 @@ namespace IMEVENT.Data
 
         public object GetRecordID()
         {
-            return GetSousZoneIdByLabel(Label);
+            return GetSousZoneIdByLabel(Label, ZoneId);
         }
     }
 }

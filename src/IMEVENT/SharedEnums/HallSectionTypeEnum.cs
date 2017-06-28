@@ -20,6 +20,9 @@ namespace IMEVENT.SharedEnums
         COOKING = 10,
         DISABLED = 11,
         NEW_BORN = 12,
-        SECOND_LANGUAGE = 13       
+        SECOND_LANGUAGE = 13,
+        CANDIDATE_FULL_MEMBER = 14,
+        MASS_REQUEST = 15,
+        AEF = 16
     }
 }

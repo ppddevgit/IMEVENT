@@ -66,7 +66,7 @@ namespace IMEVENT.Controllers
             return View();
         }
 
-       public void ProcessEvent(Event e, String source)
+        public void ProcessEvent(Event e, String source)
         {
             bool keepTrying = true;
             int i = 0;
@@ -90,7 +90,12 @@ namespace IMEVENT.Controllers
 
             //Test Data Matching
             Events.DataMatchingGenerator badge = new Events.DataMatchingGenerator(e);
-            badge.GenerateAllBadges();
+            if (!badge.GenerateAllBadges())
+            {
+                logger.Log(LogLevel.Error, "Error Printing Badges Data");                
+                return;
+            }
+
             string uploadDir = Path.Combine(_environment.WebRootPath, "uploads");
             badge.PrintBadgesToFile(uploadDir, false, true);
         }

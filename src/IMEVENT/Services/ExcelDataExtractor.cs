@@ -129,7 +129,16 @@ namespace IMEVENT.Services
                         attendee.SectionType = HallSectionTypeEnum.NONE;
                     }
 
-                    attendee.Remarks = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;
+                    object retr = worksheet.Cells[COLUMN_RETREAT + Convert.ToString(currentRow)].Value;
+                    attendee.Retreats = retr == null ? "" : retr.ToString();
+
+                    //The output file separator is ","; this character should be therefore avoided in comment
+                    string remark = (string)worksheet.Cells[COLUMN_REMARKS + Convert.ToString(currentRow)].Value;                    
+                    attendee.Remarks = (string.IsNullOrEmpty(remark)) ? "" : remark.Replace(",",";");
+
+                    string precision = (string)worksheet.Cells[COLUMN_PRECISION + Convert.ToString(currentRow)].Value;                    
+                    attendee.Precision = (string.IsNullOrEmpty(precision)) ? "" : precision.Replace(",", ";");
+
                     try
                     {
                         attendee.AmountPaid = Convert.ToInt32(worksheet.Cells[COLUMN_AMOUNTPAID + Convert.ToString(currentRow)].Value);
@@ -147,7 +156,7 @@ namespace IMEVENT.Services
                     }
                     catch
                     {
-                        attendee.SharingCategory = SharingGroupCategoryEnum.ADULTE;
+                        attendee.SharingCategory = SharingGroupCategoryEnum.ADULTE_SINGLE;
                     }
 
                     attendee.Persist();
@@ -361,6 +370,10 @@ namespace IMEVENT.Services
             group.Label = (string)sheet.Cells[COLUMN_GROUP + Convert.ToString(row)].Value;
             group.Id = group.Persist();
             user.GroupId = group.Id;
+            
+            user.TownOriginLabel = (string)sheet.Cells[COLUMN_ORIGIN_TOWN + Convert.ToString(row)].Value;
+            user.GroupOriginLabel = (string)sheet.Cells[COLUMN_ORIGIN_GROUP + Convert.ToString(row)].Value;
+
             user.persist();
             return user;
         }
@@ -396,7 +409,7 @@ namespace IMEVENT.Services
             }
             catch (Exception)
             {
-                sg.Type = SharingGroupCategoryEnum.ADULTE;
+                sg.Type = SharingGroupCategoryEnum.ADULTE_SINGLE;
             }
             sg.Persist();
         }

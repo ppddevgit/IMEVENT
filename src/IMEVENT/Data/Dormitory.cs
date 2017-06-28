@@ -18,10 +18,8 @@ namespace IMEVENT.Data
         {
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
 
-            Id = Convert.ToInt32(GetRecordID()) ;
-
+            Id = Convert.ToInt32(GetRecordID());
             
-
             if (Id != 0)
             {
                 context.Entry(this).State = Microsoft.EntityFrameworkCore.EntityState.Modified;

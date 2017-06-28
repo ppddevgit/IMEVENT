@@ -28,6 +28,12 @@ namespace IMEVENT.Data
             return this.Id;
         }
 
+        public static Dictionary<int, string> GetList()
+        {
+            ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            return context.Zones.Where(g => g.Id != 0).ToDictionary(x => x.Id, x => x.Label);
+        }
+
         public static int GetIdRefectoryIdByName(ApplicationDbContext context, string label)
         {
             var zone = context.Zones.FirstOrDefault(d => d.Label.Equals(label));

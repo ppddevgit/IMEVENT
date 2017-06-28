@@ -7,20 +7,18 @@ namespace IMEVENT.SharedEnums
 {
     public enum MembershipLevelEnum
     {        
-        INVITE = 0,
+        INVITED = 0,
         SIMPLE = 1,
-        REGULIER = 2,
-        ACTIF_1 = 3,
-        ACTIF_2 = 4,
-        ACTIF_3  = 5,
-        JEUNE_PHARE = 6,
-        ACCOMPAGNATEUR = 7,
-        AEF = 8,
-        CMP = 9,
-        MP = 10,
-        INCARNATEUR = 11,
-        RG = 12
-        
+        REGULAR = 2,
+        AKTIV_1 = 3,
+        AKTIV_2 = 4,
+        AKTIV_3  = 5,
+        YOUNG_MODEL = 6,
+        AEF = 7,
+        CANDIDATE_FULL_MEMBER = 8,
+        FULL_MEMBER = 9,
+        INCARNATOR = 10,
+        RG = 11
     }    
     
 }
