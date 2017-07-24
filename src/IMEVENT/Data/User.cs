@@ -1,14 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using IMEVENT.SharedEnums;
+using System.Threading;
+using IMEVENT.Services;
+using Microsoft.AspNetCore.Mvc;
+using System.Data.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace IMEVENT.Data
 {
     public class User : IdentityUser
     {
+     
+        private readonly IUserManager userManager;
         public DateTime DateofBirth { get; set; }
         public string Sex { get; set; }
         public int Status { get; set; }
@@ -23,6 +31,11 @@ namespace IMEVENT.Data
         public string LastName { get; set; }
         public MembershipLevelEnum Level { get; set; }
 
+        public User(IUserManager manager )
+        {
+            userManager = manager;
+           
+        }
         public override string ToString()
         {            
             string ret = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}"
@@ -39,6 +52,10 @@ namespace IMEVENT.Data
                  );
 
             return ret;
+        }
+        public User()
+        {
+
         }
 
         public int OriginZone { get; set; }
@@ -85,15 +102,38 @@ namespace IMEVENT.Data
             //the time they are saved in the database. 
             
             ApplicationDbContext context = ApplicationDbContext.GetDbContext();
+            //var store = new UserStore<User>(context);
+            //var manager = new UserManager<User>(store, null, null, null, null, null, null, null, null);
+       
             string exists = GetUserIdByName(LastName + FirstName);
             if (string.IsNullOrEmpty(exists))
             {
                 context.Users.Add(this);
                 context.SaveChanges();
-                return this.Id;
+                exists =  this.Id;
             }
-
-            //user already exists - TODO : find a way to update user info in DB            
+            else
+            {
+                
+               this.Id = exists;
+                // needs to be updated will do that with raw SQL since I am having issues with UserManager.  
+                String sql = "update AspNetUsers " +
+                             "Set " +
+                             "Sex = '" + Sex + "' , " +
+                             "Status = '" + Status + "' , " +
+                             "Language = '" + Language + "' , " +
+                             "InvitedBy = '" + InvitedBy + "' , " +
+                             "GroupId = " + GroupId + " , " +
+                             "ZoneId = " + ZoneId + " , " +
+                             "SousZoneId = " + SousZoneId + " , " +
+                             "Town = '" + Town + "' , " +
+                             "IsGroupResponsible = " + (IsGroupResponsible ? 1: 0) + " , " +
+                             "FirstName = '" + FirstName + "' , " +
+                             "LastName = '" + LastName + "' "+
+                             "where id = '" + exists + "' ";
+                context.Database.ExecuteSqlCommand(sql);
+            }
+            
             this.Id = exists;
             return this.Id;
         }
